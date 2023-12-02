@@ -1,0 +1,53 @@
+#include<iostream>
+#include<string>
+#include<fstream>
+#include<algorithm>
+#include<climits>
+using namespace std;
+
+
+int main(){
+    long long ans=0;
+    string s;
+    
+    ifstream fin;
+    fin.open("input.txt");
+    while(getline(fin,s)){
+        int red=0,green=0,blue=0;
+        int count=0,j=5;
+        string curr="";
+        while(s[j]!=':')
+            j++;
+
+        for(int i=j+2;i<s.length();++i)
+        {
+            if(s[i]==';'||s[i]==',')
+            {
+                if(curr=="red")
+                    red=max(count,red);
+                else if(curr=="green")
+                    green=max(count,green);
+                else if(curr=="blue")
+                    blue=max(count,blue);
+                count=0;
+            }
+            else if(s[i]==' ')
+                curr="";
+            else if(s[i]-'0'>=0&&s[i]-'0'<=9)
+                count=count*10+(s[i]-'0');
+            else
+                curr+=s[i];
+        }
+        if(curr=="red")
+            red=max(count,red);
+        else if(curr=="green")
+            green=max(count,green);
+        else if(curr=="blue")
+            blue=max(count,blue);
+        
+        ans+=(red*green*blue);
+    }
+    fin.close();
+    cout<<ans<<endl;
+    return 0;
+}

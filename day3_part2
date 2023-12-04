@@ -1,0 +1,74 @@
+#include<iostream>
+#include<string>
+#include<fstream>
+#include<algorithm>
+#include<cmath>
+#include<vector>
+using namespace std;
+
+
+int main(){
+    long long ans=0;
+    string s;
+    vector<vector<char>> v;
+    ifstream fin;
+    fin.open("input.txt");
+    
+    while(getline(fin,s)){
+        vector<char> temp;
+        for(int i=0;i<s.length();i++){
+            temp.push_back(s[i]);
+        }
+        v.push_back(temp);
+    }
+    fin.close();
+    vector<vector<int>> vis(v.size(),vector<int>(v[0].size(),0));
+
+    for(int i=0;i<v.size();++i)
+    {
+        for(int j=0;j<v[0].size();++j)
+        {
+            if(v[i][j]=='*')
+            {
+                vector<long long> count;
+                for(int r=-1;r<=1;r++)
+                {
+                    for(int c=-1;c<=1;c++)
+                    {
+                        int row=i+r;
+                        int col=j+c;
+                        if(row>=0&&row<v.size()&&col>=0&&col<v[0].size())
+                        {
+                            if(!vis[row][col]&&v[row][col]-'0'>=0&&v[row][col]-'0'<=9)
+                            {
+                                long long temp=v[row][col]-'0';
+                                vis[row][col]=1;
+                                int m=col-1,f=10;
+                                while(m>=0&&v[row][m]-'0'>=0&&v[row][m]-'0'<=9)
+                                {
+                                    temp+=((v[row][m]-'0')*f);
+                                    vis[row][m]=1;
+                                    m--;
+                                    f*=10;
+                                }
+                                m=col+1;
+                                while(m<v[0].size()&&v[row][m]-'0'>=0&&v[row][m]-'0'<=9)
+                                {
+                                    temp=temp*10+(v[row][m]-'0');
+                                    vis[row][m]=1;
+                                    m++;
+                                }
+                                count.push_back(temp);
+                            }
+                        }
+                    }
+                }
+                if(count.size()==2)
+                    ans+=(count[0]*count[1]);
+                
+            }
+        }
+    }
+    cout<<ans<<endl;
+    return 0;
+}
